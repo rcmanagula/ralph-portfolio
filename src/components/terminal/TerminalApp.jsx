@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { RESUME } from '@/lib/resume';
+import { useActiveSection } from '@/lib/useActiveSection';
 import BootSequence from '../shared/BootSequence';
 import TerminalTopNav from './TerminalTopNav';
 import PixelHero from './PixelHero';
@@ -10,25 +11,30 @@ import TerminalWindow from './TerminalWindow';
 import ExperienceLog from './ExperienceLog';
 import SkillsArsenal from './SkillsArsenal';
 import RoadmapTracker from './RoadmapTracker';
-import CommandPrompt from './CommandPrompt';
 import DownloadResumeButton from './DownloadResumeButton';
+import ContactLine from './ContactLine';
+import KeyboardNav from './KeyboardNav';
+import SlimStatusBar from './SlimStatusBar';
+
+const SECTION_IDS = ['whoami', 'experience', 'arsenal', 'roadmap', 'contact'];
 
 export default function TerminalApp() {
   const [booted, setBooted] = useState(false);
-  const downloadRef = useRef(null);
   const R = RESUME;
+  const activeId = useActiveSection(SECTION_IDS);
 
   return (
     <>
       {!booted && <BootSequence onDone={() => setBooted(true)} />}
+      <KeyboardNav />
 
-      <TerminalTopNav />
+      <TerminalTopNav activeId={activeId} />
 
       <main
         style={{
           maxWidth: 1200,
           margin: '0 auto',
-          padding: '0 24px 24px',
+          padding: '0 20px 24px',
           fontFamily: 'var(--font-mono)',
         }}
       >
@@ -42,7 +48,7 @@ export default function TerminalApp() {
             flexWrap: 'wrap',
           }}
         >
-          <DownloadResumeButton ref={downloadRef} />
+          <DownloadResumeButton />
           <a
             className="btn"
             href={`mailto:${R.identity.email}`}
@@ -104,12 +110,12 @@ export default function TerminalApp() {
           <SkillsArsenal skills={R.skills} />
         </section>
 
-        <section id="contact" style={{ marginBottom: 56 }}>
+        <section id="roadmap" style={{ marginBottom: 56 }}>
           <SectionHeader cmd="roadmap --next" sub="certification progression" />
           <RoadmapTracker certifications={R.certifications} />
         </section>
 
-        <section style={{ marginBottom: 24 }}>
+        <section id="education" style={{ marginBottom: 56 }}>
           <SectionHeader cmd="cat ./education.txt" />
           <TerminalWindow filename="@education.log">
             <div>{R.education.degree}</div>
@@ -117,11 +123,24 @@ export default function TerminalApp() {
             <div style={{ color: 'var(--fg-2)', fontSize: 12 }}>{R.education.years}</div>
           </TerminalWindow>
         </section>
+
+        <section id="contact" style={{ marginBottom: 24 }}>
+          <SectionHeader cmd="contact --all" sub="open inbox · response within 24h" />
+          <TerminalWindow filename="@contact.txt">
+            <ContactLine label="email" value={R.identity.email} href={`mailto:${R.identity.email}`} />
+            <ContactLine label="phone" value={R.identity.phone} href={`tel:${R.identity.phone.replace(/[^0-9+]/g, '')}`} />
+            <ContactLine
+              label="linkedin"
+              value={R.identity.linkedin}
+              href={`https://${R.identity.linkedin}`}
+              external
+            />
+            <ContactLine label="location" value={R.identity.location} copyable={false} />
+          </TerminalWindow>
+        </section>
       </main>
 
-      <CommandPrompt
-        onDownload={() => downloadRef.current && downloadRef.current.trigger()}
-      />
+      <SlimStatusBar statusLabel={R.identity.status} activeId={activeId} />
     </>
   );
 }

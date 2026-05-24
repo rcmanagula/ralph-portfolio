@@ -2,15 +2,8 @@
 
 export default function RoadmapVisual({ certifications }) {
   return (
-    <div className="card" style={{ padding: 28 }}>
-      <div
-        style={{
-          display: 'flex',
-          gap: 0,
-          alignItems: 'stretch',
-          overflowX: 'auto',
-        }}
-      >
+    <div className="card roadmap-card" style={{ padding: 28 }}>
+      <div className="roadmap-track">
         {certifications.map((c, i) => {
           const isLast = i === certifications.length - 1;
           const isAchieved = c.status === 'achieved';
@@ -39,6 +32,7 @@ export default function RoadmapVisual({ certifications }) {
             >
               {!isLast && (
                 <div
+                  className="roadmap-connector"
                   style={{
                     position: 'absolute',
                     top: 17,
@@ -71,6 +65,18 @@ export default function RoadmapVisual({ certifications }) {
                 {isAchieved ? '✓' : isInProgress ? '…' : i + 1}
               </div>
               <div style={{ marginTop: 14, textAlign: 'center', padding: '0 8px' }}>
+                {c.tier && (
+                  <div
+                    className="t-eyebrow"
+                    style={{
+                      marginBottom: 8,
+                      color: 'var(--fg-2)',
+                      fontSize: 10,
+                    }}
+                  >
+                    {c.tier}
+                  </div>
+                )}
                 <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
                   {c.name}
                 </div>

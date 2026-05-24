@@ -2,17 +2,10 @@
 
 import { Download, Mail, Linkedin } from 'lucide-react';
 
-export default function CorporateHero({ identity, about, onDownload }) {
-  const stats = [
-    { label: 'Focus', value: identity.title, sub: identity.tagline },
-    { label: 'Certification', value: 'CompTIA PenTest+', sub: 'Achieved' },
-    { label: 'Based in', value: 'Metro Manila, PH', sub: 'Available remote' },
-    { label: 'Status', value: 'Open to roles', sub: 'VAPT · Red Team · AppSec' },
-  ];
-
+export default function CorporateHero({ identity, brief, onDownload }) {
   return (
-    <section style={{ padding: '96px 24px 64px', textAlign: 'left' }}>
-      <div style={{ maxWidth: 'var(--content-max)', margin: '0 auto' }}>
+    <section className="section--hero" style={{ textAlign: 'left' }}>
+      <div className="section--container">
         <div className="t-eyebrow" style={{ marginBottom: 20 }}>
           <span
             className="dot"
@@ -24,14 +17,13 @@ export default function CorporateHero({ identity, about, onDownload }) {
         <div
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: 20,
+            fontSize: 'clamp(16px, 1.8vw, 20px)',
             color: 'var(--fg-1)',
-            maxWidth: 720,
+            maxWidth: 760,
             lineHeight: 1.55,
           }}
         >
-          {about.headline}{' '}
-          <span style={{ color: 'var(--fg-0)' }}>{about.long}</span>
+          {identity.title} · {identity.tagline}
         </div>
 
         <div
@@ -58,25 +50,124 @@ export default function CorporateHero({ identity, about, onDownload }) {
           </a>
         </div>
 
+        {/* Executive Summary — what a recruiter actually reads */}
         <div
           style={{
-            marginTop: 56,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 16,
+            marginTop: 48,
+            padding: 'clamp(20px, 3vw, 28px)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--r-lg)',
+            background: 'var(--bg-1)',
+            position: 'relative',
           }}
         >
-          {stats.map((s, i) => (
-            <div key={i} className="card" style={{ padding: 16 }}>
-              <div className="t-eyebrow" style={{ marginBottom: 6 }}>
-                {s.label}
-              </div>
-              <div style={{ fontSize: 15, fontWeight: 500 }}>{s.value}</div>
-              <div className="t-small">{s.sub}</div>
+          <div
+            className="t-eyebrow"
+            style={{
+              position: 'absolute',
+              top: -10,
+              left: 16,
+              background: 'var(--bg-0)',
+              padding: '0 10px',
+              color: 'var(--accent)',
+            }}
+          >
+            Executive Summary
+          </div>
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'clamp(15px, 1.5vw, 17px)',
+              lineHeight: 1.65,
+              color: 'var(--fg-0)',
+              margin: 0,
+            }}
+          >
+            {brief.executiveSummary}
+          </p>
+        </div>
+
+        {/* Engagement Profile — ID-card-style facts */}
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--r-lg)',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              padding: '10px 20px',
+              background: 'var(--bg-1)',
+              borderBottom: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: 12,
+            }}
+          >
+            <div className="t-eyebrow" style={{ color: 'var(--accent)' }}>
+              Engagement Profile
             </div>
-          ))}
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                color: 'var(--fg-2)',
+                letterSpacing: '0.1em',
+              }}
+            >
+              {brief.docId} · {brief.period}
+            </div>
+          </div>
+          <dl
+            style={{
+              margin: 0,
+              padding: 'clamp(16px, 2vw, 20px)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 'clamp(14px, 2vw, 20px)',
+            }}
+          >
+            <ProfileRow label="Candidate" value={identity.name} />
+            <ProfileRow label="Target Role" value={identity.title} mono />
+            <ProfileRow label="Posture" value={identity.tagline} />
+            <ProfileRow label="Certification" value="CompTIA PenTest+" />
+            <ProfileRow label="Location" value={identity.location} />
+            <ProfileRow
+              label="Availability"
+              value="Open · Remote-friendly"
+              highlight
+            />
+          </dl>
         </div>
       </div>
     </section>
+  );
+}
+
+function ProfileRow({ label, value, mono = false, highlight = false }) {
+  return (
+    <div>
+      <dt
+        className="t-eyebrow"
+        style={{ marginBottom: 6, color: 'var(--fg-2)' }}
+      >
+        {label}
+      </dt>
+      <dd
+        style={{
+          margin: 0,
+          fontSize: 15,
+          fontWeight: 500,
+          fontFamily: mono ? 'var(--font-mono)' : 'var(--font-body)',
+          color: highlight ? 'var(--accent)' : 'var(--fg-0)',
+        }}
+      >
+        {value}
+      </dd>
+    </div>
   );
 }

@@ -10,8 +10,45 @@ import {
   Monitor,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { FREQ_COLOR, FREQ_LABEL, formatYears } from '@/lib/proficiency';
 
 const ICONS = { Radar, Smartphone, Code2, Wifi, ShieldCheck, Terminal, Monitor };
+
+function SkillBadge({ item }) {
+  const isObj = typeof item !== 'string';
+  const name = isObj ? item.name : item;
+  const freq = isObj ? item.freq : null;
+  const years = isObj ? item.years : null;
+  const dotColor = freq ? FREQ_COLOR[freq] : 'var(--fg-2)';
+
+  return (
+    <span
+      className="badge"
+      title={freq ? `${FREQ_LABEL[freq]} · ${formatYears(years)}` : name}
+      style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+    >
+      {freq && (
+        <span
+          aria-hidden="true"
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 999,
+            background: dotColor,
+            boxShadow: freq === 'daily' ? `0 0 6px ${dotColor}` : 'none',
+            flexShrink: 0,
+          }}
+        />
+      )}
+      <span>{name}</span>
+      {years != null && (
+        <span style={{ color: 'var(--fg-2)', fontWeight: 400 }}>
+          · {formatYears(years)}
+        </span>
+      )}
+    </span>
+  );
+}
 
 export default function SkillsGrid({ skills, focusAreas }) {
   return (
@@ -65,14 +102,34 @@ export default function SkillsGrid({ skills, focusAreas }) {
               </div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {cat.items.map((it) => (
-                  <span key={it} className="badge">
-                    {it}
-                  </span>
+                  <SkillBadge key={typeof it === 'string' ? it : it.name} item={it} />
                 ))}
               </div>
             </motion.div>
           );
         })}
+      </div>
+
+      <div
+        style={{
+          marginTop: 28,
+          padding: '14px 20px',
+          border: '1px dashed var(--border)',
+          borderRadius: 'var(--r-md)',
+          display: 'flex',
+          gap: 22,
+          flexWrap: 'wrap',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 12,
+          color: 'var(--fg-2)',
+          alignItems: 'center',
+        }}
+      >
+        <span>Legend:</span>
+        <LegendDot color="var(--accent)" label="daily" glow />
+        <LegendDot color="var(--accent)" label="weekly" />
+        <LegendDot color="var(--warn)" label="occasional" />
+        <LegendDot color="var(--fg-2)" label="learning" />
       </div>
 
       <div
@@ -95,5 +152,22 @@ export default function SkillsGrid({ skills, focusAreas }) {
         </div>
       </div>
     </>
+  );
+}
+
+function LegendDot({ color, label, glow }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+      <span
+        style={{
+          width: 7,
+          height: 7,
+          borderRadius: 999,
+          background: color,
+          boxShadow: glow ? `0 0 6px ${color}` : 'none',
+        }}
+      />
+      <span>{label}</span>
+    </span>
   );
 }

@@ -2,6 +2,17 @@
    All facts verbatim from the source résumé PDF — no inventions. */
 
 export const RESUME = {
+  // Corporate-mode "pentest report" framing
+  brief: {
+    classification: 'CONFIDENTIAL · CANDIDATE BRIEF',
+    docId: 'RCM-2026-001',
+    version: 'v1.0',
+    period: '2026.05',
+    preparedBy: 'Ralph Christian Managula',
+    executiveSummary:
+      'Offensive security professional with four years of hands-on VAPT, red-team, and AppSec engagements across banking, government, and Google-scale engineering teams. Specializes in translating attacker techniques into clear remediation actions that both technical and non-technical stakeholders can act on. Currently leading vulnerability assessment and penetration testing across the web, API, mobile, and corebanking surface area at a tier-1 Philippine retail bank.',
+  },
+
   identity: {
     name: "Ralph Christian Managula",
     handle: "ralph",
@@ -26,12 +37,14 @@ export const RESUME = {
   experience: [
     {
       id: "cimb",
+      engId: "ENG-2025-001",
       logo: "C",
       role: "Tech Vulnerability Engineer (VAPT)",
       company: "CIMB Bank Philippines",
       start: "Oct 2025",
       end: "May 2026",
       current: true,
+      tags: ["INTERNAL", "BANKING", "CRITICAL-INFRA"],
       summary:
         "Owned offensive testing across web, API, mobile, and corebanking surface area at a large retail bank.",
       bullets: [
@@ -46,12 +59,14 @@ export const RESUME = {
     },
     {
       id: "ngt",
+      engId: "ENG-2024-002",
       logo: "N",
       role: "Penetration Tester",
       company: "Next Generation Technologies Global Inc.",
       start: "Mar 2024",
       end: "Oct 2025",
       current: false,
+      tags: ["EXTERNAL", "CONSULTING", "GOVERNMENT", "RED-TEAM"],
       summary:
         "3rd-party VAPT engagements for private companies and Philippine government bodies.",
       bullets: [
@@ -63,12 +78,14 @@ export const RESUME = {
     },
     {
       id: "goc",
+      engId: "ENG-2022-003",
       logo: "G",
       role: "Tech Process Senior Associate",
       company: "Google Operations Center",
       start: "May 2022",
       end: "Feb 2024",
       current: false,
+      tags: ["ENGINEERING", "INTERNATIONAL", "PAYMENTS"],
       summary:
         "Direct work with US-based Google engineers on Payment Services bug triage.",
       bullets: [
@@ -79,26 +96,120 @@ export const RESUME = {
     },
   ],
 
+  // Proficiency scale:
+  //   daily      — used in current/recent work, multiple times a week
+  //   weekly     — regular but not constant
+  //   occasional — situational use, deep know-how but not always reached for
+  //   learning   — exploring, not engagement-grade yet
+  // years = total professional time using the tool
   skills: [
     {
       category: "VAPT & Recon",
       icon: "Radar",
-      items: ["Burp Suite", "Metasploit", "Nmap", "Nessus", "Qualys", "OWASP ZAP", "sqlmap", "dirbuster", "nikto", "hydra", "theHarvester"],
+      items: [
+        { name: "Nmap",       freq: "daily",      years: 4 },
+        { name: "Subfinder",  freq: "weekly",     years: 2.5 },
+        { name: "Nuclei",     freq: "weekly",     years: 3 },
+        { name: "Maltego",    freq: "occasional", years: 0.5 },
+        { name: "Shodan",     freq: "occasional", years: 2 },
+        { name: "Metasploit Framework", freq: "weekly", years: 3 },
+        { name: "Nessus",     freq: "weekly",     years: 2 },
+        { name: "Qualys",     freq: "weekly",     years: 3 },
+        { name: "Wireshark",  freq: "weekly",     years: 3.5 },
+      ],
     },
     {
-      category: "Mobile Security & Reverse Engineering",
-      icon: "Smartphone",
-      items: ["Frida", "MobSF", "Ghidra", "IDA Pro"],
+      category: "Web Application Security",
+      icon: "Code2",
+      items: [
+        { name: "Burp Suite", freq: "daily",  years: 4 },
+        { name: "OWASP ZAP",  freq: "daily",  years: 4 },
+        { name: "sqlmap",     freq: "weekly", years: 4 },
+        { name: "ffuf",       freq: "daily",  years: 4 },
+      ],
     },
-    { category: "SAST", icon: "Code2", items: ["Fortify Scanner"] },
-    { category: "Network & Wireless", icon: "Wifi", items: ["Wireshark", "aircrack-ng"] },
+    {
+      category: "Mobile & Reverse Engineering",
+      icon: "Smartphone",
+      items: [
+        { name: "MobSF",           freq: "daily",      years: 4 },
+        { name: "Frida",           freq: "daily",      years: 3 },
+        { name: "Objection",       freq: "weekly",     years: 3 },
+        { name: "dnSpy",           freq: "occasional", years: 1 },
+        { name: "Process Monitor", freq: "occasional", years: 1 },
+        { name: "IDA Pro",         freq: "weekly",     years: 2 },
+        { name: "Ghidra",          freq: "weekly",     years: 2 },
+      ],
+    },
+    {
+      category: "AD & Post-Exploitation",
+      icon: "ShieldCheck",
+      items: [
+        { name: "BloodHound",    freq: "occasional", years: 1 },
+        { name: "SharpHound",    freq: "occasional", years: 1 },
+        { name: "Impacket",      freq: "occasional", years: 1 },
+        { name: "CrackMapExec",  freq: "occasional", years: 0.5 },
+        { name: "Mimikatz",      freq: "occasional", years: 1 },
+      ],
+    },
+    {
+      category: "Password Attacks",
+      icon: "Terminal",
+      items: [
+        { name: "Hashcat",          freq: "weekly", years: 3 },
+        { name: "John the Ripper",  freq: "weekly", years: 3 },
+        { name: "Hydra",            freq: "weekly", years: 3 },
+      ],
+    },
+    {
+      category: "Wireless",
+      icon: "Wifi",
+      items: [
+        { name: "aircrack-ng", freq: "occasional", years: 2 },
+      ],
+    },
+    {
+      category: "Cloud Security",
+      icon: "Radar",
+      items: [
+        { name: "ScoutSuite", freq: "occasional", years: 0.5 },
+        { name: "Pacu",       freq: "occasional", years: 0.5 },
+      ],
+    },
+    {
+      category: "Social Engineering",
+      icon: "Smartphone",
+      items: [
+        { name: "GoPhish", freq: "weekly", years: 2 },
+      ],
+    },
     {
       category: "Frameworks & Compliance",
       icon: "ShieldCheck",
-      items: ["OWASP Top 10", "NIST", "CVSS", "PTES", "Secure SDLC"],
+      items: [
+        { name: "OWASP Top 10", freq: "daily",  years: 4 },
+        { name: "NIST",         freq: "weekly", years: 3 },
+        { name: "CVSS",         freq: "daily",  years: 4 },
+        { name: "PTES",         freq: "weekly", years: 3 },
+        { name: "Secure SDLC",  freq: "weekly", years: 1 },
+      ],
     },
-    { category: "Programming", icon: "Terminal", items: ["Python", "Bash", "Java"] },
-    { category: "Platforms", icon: "Monitor", items: ["Linux (Kali Linux)", "Windows"] },
+    {
+      category: "Programming",
+      icon: "Terminal",
+      items: [
+        { name: "Python", freq: "weekly",     years: 3 },
+        { name: "Bash",   freq: "daily",      years: 3 },
+        { name: "Java",   freq: "occasional", years: 2 },
+      ],
+    },
+    {
+      category: "Platforms",
+      icon: "Monitor",
+      items: [
+        { name: "Kali Linux", freq: "daily", years: 4 },
+      ],
+    },
   ],
 
   focusAreas: [
@@ -110,10 +221,10 @@ export const RESUME = {
   ],
 
   certifications: [
-    { id: "pentest-plus", name: "CompTIA PenTest+", issuer: "CompTIA", status: "achieved", year: "Achieved" },
-    { id: "cpts", name: "Hack The Box CPTS", issuer: "Hack The Box", status: "in-progress", year: "Next" },
-    { id: "bscp", name: "Burp Suite Certified Practitioner", issuer: "PortSwigger", status: "planned", year: "Planned" },
-    { id: "oscp", name: "OSCP+", issuer: "Offensive Security", status: "planned", year: "Goal" },
+    { id: "pentest-plus", name: "CompTIA PenTest+", issuer: "CompTIA", status: "achieved", year: "Achieved", tier: "Foundational" },
+    { id: "cpts", name: "Hack The Box CPTS", issuer: "Hack The Box", status: "in-progress", year: "Next", tier: "Practitioner" },
+    { id: "bscp", name: "Burp Suite Certified Practitioner", issuer: "PortSwigger", status: "planned", year: "Planned", tier: "Practitioner" },
+    { id: "oscp", name: "OSCP+", issuer: "Offensive Security", status: "planned", year: "Goal", tier: "Expert" },
   ],
 
   education: {

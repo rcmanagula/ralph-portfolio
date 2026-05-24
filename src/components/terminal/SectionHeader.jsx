@@ -4,6 +4,7 @@ export default function SectionHeader({ cmd, sub }) {
   return (
     <div style={{ marginBottom: 24 }}>
       <div
+        className="phosphor"
         style={{
           fontFamily: 'var(--font-mono)',
           fontSize: 24,
@@ -12,6 +13,7 @@ export default function SectionHeader({ cmd, sub }) {
         }}
       >
         <span className="accent">&gt;</span> {cmd}
+        <span className="caret" style={{ marginLeft: 6 }} aria-hidden="true"></span>
       </div>
       {sub && (
         <div

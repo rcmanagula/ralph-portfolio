@@ -51,9 +51,52 @@ export default function ExperienceTimeline({ experience }) {
                 className="badge badge-accent"
                 style={{ position: 'absolute', top: -10, right: 16 }}
               >
-                <span className="dot" /> Current
+                <span className="dot" /> Active Engagement
               </span>
             )}
+
+            {/* Engagement ID strip */}
+            {job.engId && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  marginBottom: 12,
+                  paddingBottom: 12,
+                  borderBottom: '1px dashed var(--border)',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    color: 'var(--accent)',
+                    letterSpacing: '0.1em',
+                    fontWeight: 600,
+                  }}
+                >
+                  {job.engId}
+                </span>
+                {job.tags && job.tags.map((t) => (
+                  <span
+                    key={t}
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 10.5,
+                      color: 'var(--fg-2)',
+                      border: '1px solid var(--border)',
+                      padding: '2px 7px',
+                      letterSpacing: '0.08em',
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
+
             <div
               style={{
                 display: 'flex',
@@ -82,11 +125,25 @@ export default function ExperienceTimeline({ experience }) {
                 </div>
               </div>
             </div>
+
+            <div
+              className="t-eyebrow"
+              style={{ marginBottom: 8, color: 'var(--fg-2)' }}
+            >
+              Scope
+            </div>
             <div
               className="t-lead muted"
-              style={{ fontSize: 15, marginBottom: 14, lineHeight: 1.55 }}
+              style={{ fontSize: 15, marginBottom: 16, lineHeight: 1.55 }}
             >
               {job.summary}
+            </div>
+
+            <div
+              className="t-eyebrow"
+              style={{ marginBottom: 8, color: 'var(--fg-2)' }}
+            >
+              Findings &amp; Outcomes
             </div>
             <ul
               style={{

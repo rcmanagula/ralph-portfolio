@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { RESUME } from '@/lib/resume';
+import { useActiveSection } from '@/lib/useActiveSection';
 import CorporateTopNav from './CorporateTopNav';
 import CorporateHero from './CorporateHero';
 import CorporateSectionHeader from './CorporateSectionHeader';
@@ -9,13 +10,16 @@ import ExperienceTimeline from './ExperienceTimeline';
 import SkillsGrid from './SkillsGrid';
 import RoadmapVisual from './RoadmapVisual';
 import CorporateFooter from './CorporateFooter';
+import DocumentHeader from './DocumentHeader';
 
 const RESUME_HREF = '/Ralph_Christian_Managula_Resume.pdf';
+const CORP_SECTION_IDS = ['about', 'experience', 'arsenal', 'roadmap', 'contact'];
 
 export default function CorporateApp() {
   const [downloading, setDownloading] = useState(false);
   const [pct, setPct] = useState(0);
   const R = RESUME;
+  const activeId = useActiveSection(CORP_SECTION_IDS);
 
   const triggerDownload = () => {
     if (downloading) return;
@@ -44,26 +48,28 @@ export default function CorporateApp() {
 
   return (
     <>
-      <CorporateTopNav identity={R.identity} />
+      <DocumentHeader brief={R.brief} />
+      <CorporateTopNav identity={R.identity} activeId={activeId} />
 
       <main>
         <div id="about">
           <CorporateHero
             identity={R.identity}
-            about={R.about}
+            brief={R.brief}
             onDownload={triggerDownload}
           />
         </div>
 
         <section
           id="experience"
-          style={{ padding: '64px 24px', borderTop: '1px solid var(--border)' }}
+          className="section"
+          style={{ borderTop: '1px solid var(--border)' }}
         >
-          <div style={{ maxWidth: 'var(--content-max)', margin: '0 auto' }}>
+          <div className="section--container">
             <CorporateSectionHeader
-              eyebrow="Experience"
+              eyebrow="§ 01 · Engagement Log"
               title="Operations across banking, government, and Google-scale engineering."
-              kicker="Three roles, one consistent posture: think like an attacker, ship like an engineer, report like a consultant."
+              kicker="Three engagements, one consistent posture: think like an attacker, ship like an engineer, communicate like a consultant."
             />
             <ExperienceTimeline experience={R.experience} />
           </div>
@@ -71,17 +77,17 @@ export default function CorporateApp() {
 
         <section
           id="arsenal"
+          className="section"
           style={{
-            padding: '64px 24px',
             borderTop: '1px solid var(--border)',
             background: 'var(--bg-0)',
           }}
         >
-          <div style={{ maxWidth: 'var(--content-max)', margin: '0 auto' }}>
+          <div className="section--container">
             <CorporateSectionHeader
-              eyebrow="Technical Arsenal"
+              eyebrow="§ 02 · Methodology & Toolchain"
               title="Tooling, frameworks, and platforms."
-              kicker="Hands-on with industry-standard offensive and defensive tools across web, mobile, network, and red-team operations."
+              kicker="Industry-standard offensive and defensive tools across web, mobile, network, cloud, and red-team operations — annotated with usage frequency and tenure."
             />
             <SkillsGrid skills={R.skills} focusAreas={R.focusAreas} />
           </div>
@@ -89,20 +95,72 @@ export default function CorporateApp() {
 
         <section
           id="roadmap"
-          style={{ padding: '64px 24px', borderTop: '1px solid var(--border)' }}
+          className="section"
+          style={{ borderTop: '1px solid var(--border)' }}
         >
-          <div style={{ maxWidth: 'var(--content-max)', margin: '0 auto' }}>
+          <div className="section--container">
             <CorporateSectionHeader
-              eyebrow="Certification Roadmap"
+              eyebrow="§ 03 · Continuing Education Pipeline"
               title="Continual progression toward advanced offensive credentials."
-              kicker="From foundational CompTIA certification through specialist practitioner badges into the OSCP+ tier."
+              kicker="From foundational certification through specialist practitioner badges into the OSCP+ expert tier."
             />
             <RoadmapVisual certifications={R.certifications} />
           </div>
         </section>
+
+        <section
+          id="contact"
+          className="section"
+          style={{
+            borderTop: '1px solid var(--border)',
+            background: 'var(--bg-0)',
+          }}
+        >
+          <div className="section--container">
+            <CorporateSectionHeader
+              eyebrow="§ 04 · Contact"
+              title="Open inbox. Response within 24 hours."
+              kicker="Available for VAPT engagements, red-team operations, AppSec consulting, and full-time roles."
+            />
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: 16,
+              }}
+            >
+              <a className="card contact-card" href={`mailto:${R.identity.email}`}>
+                <div className="t-eyebrow" style={{ marginBottom: 6 }}>Email</div>
+                <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--fg-0)' }}>
+                  {R.identity.email}
+                </div>
+              </a>
+              <a
+                className="card contact-card"
+                href={`tel:${R.identity.phone.replace(/[^0-9+]/g, '')}`}
+              >
+                <div className="t-eyebrow" style={{ marginBottom: 6 }}>Phone</div>
+                <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--fg-0)' }}>
+                  {R.identity.phone}
+                </div>
+              </a>
+              <a
+                className="card contact-card"
+                href={`https://${R.identity.linkedin}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className="t-eyebrow" style={{ marginBottom: 6 }}>LinkedIn</div>
+                <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--fg-0)' }}>
+                  {R.identity.linkedin}
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
       </main>
 
-      <CorporateFooter identity={R.identity} education={R.education} />
+      <CorporateFooter identity={R.identity} education={R.education} brief={R.brief} />
 
       {downloading && (
         <div

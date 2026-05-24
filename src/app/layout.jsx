@@ -1,10 +1,44 @@
 import './globals.css';
 import { ModeProvider } from '@/lib/ModeContext';
 
+const SITE_URL = 'https://ralph-portfolio.vercel.app';
+const TITLE = 'Ralph Christian Managula · Offensive Security';
+const DESCRIPTION =
+  'Penetration tester and red team operator. CompTIA PenTest+ certified. VAPT across banking, government, and enterprise — Burp Suite, Frida, Ghidra, Metasploit, Nessus. Based in Metro Manila, open to remote.';
+
 export const metadata = {
-  title: 'Ralph Christian Managula · Offensive Security',
-  description:
-    'Penetration tester, red team operator, and CompTIA PenTest+ certified offensive security professional based in Metro Manila.',
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  keywords: [
+    'penetration tester',
+    'pentester',
+    'offensive security',
+    'red team',
+    'VAPT',
+    'CompTIA PenTest+',
+    'Burp Suite',
+    'OSCP',
+    'Philippines',
+    'Metro Manila',
+    'Ralph Managula',
+  ],
+  authors: [{ name: 'Ralph Christian Managula' }],
+  creator: 'Ralph Christian Managula',
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'profile',
+    url: '/',
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: 'Ralph Christian Managula',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  robots: { index: true, follow: true },
   icons: {
     icon: [
       {
@@ -12,6 +46,12 @@ export const metadata = {
       },
     ],
   },
+};
+
+export const viewport = {
+  themeColor: '#050607',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {

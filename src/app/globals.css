@@ -25,6 +25,7 @@
   --accent: #00FF41;
   --accent-dim: #00b837;
   --accent-glow: rgba(0, 255, 65, 0.35);
+  --accent-2: #5b9bff;
   --warn: #ffb454;
   --danger: #ff5c5c;
 
@@ -67,6 +68,7 @@
   --accent: #dc2626;
   --accent-dim: #b91c1c;
   --accent-glow: rgba(220, 38, 38, 0.35);
+  --accent-2: #60a5fa;
   --warn: #fbbf24;
   --danger: #f87171;
 
@@ -116,6 +118,15 @@ section[id],
 }
 
 /* Terminal scanline + vignette overlay */
+@keyframes crt-flicker {
+  0%, 100% { opacity: 0.85; }
+  10%      { opacity: 0.92; }
+  20%      { opacity: 0.78; }
+  35%      { opacity: 0.95; }
+  55%      { opacity: 0.82; }
+  70%      { opacity: 0.9;  }
+  85%      { opacity: 0.76; }
+}
 :root[data-mode="terminal"] body::before {
   content: "";
   position: fixed; inset: 0;
@@ -129,6 +140,16 @@ section[id],
   );
   z-index: 9999;
   mix-blend-mode: overlay;
+  opacity: 0.85;
+}
+@media (min-width: 720px) and (prefers-reduced-motion: no-preference) {
+  :root[data-mode="terminal"] body::before {
+    animation: crt-flicker 6s steps(12, end) infinite;
+  }
+}
+/* Mobile: drop the overlay entirely to save GPU */
+@media (max-width: 720px) {
+  :root[data-mode="terminal"] body::before { display: none; }
 }
 :root[data-mode="terminal"] body::after {
   content: "";
@@ -164,7 +185,7 @@ section[id],
 
 .t-h1, h1 {
   font-family: var(--font-display);
-  font-size: 56px;
+  font-size: clamp(36px, 6vw, 56px);
   line-height: 1.05;
   letter-spacing: -0.01em;
   font-weight: 700;
@@ -172,7 +193,7 @@ section[id],
 }
 :root[data-mode="corporate"] .t-h1,
 :root[data-mode="corporate"] h1 {
-  font-size: 64px;
+  font-size: clamp(36px, 6vw, 64px);
   font-weight: 600;
   font-style: normal;
   letter-spacing: -0.02em;
@@ -180,7 +201,7 @@ section[id],
 
 .t-h2, h2 {
   font-family: var(--font-display);
-  font-size: 32px;
+  font-size: clamp(24px, 4vw, 32px);
   line-height: 1.15;
   letter-spacing: -0.01em;
   font-weight: 700;
@@ -188,7 +209,7 @@ section[id],
 }
 :root[data-mode="corporate"] .t-h2,
 :root[data-mode="corporate"] h2 {
-  font-size: 32px;
+  font-size: clamp(24px, 4vw, 32px);
   font-weight: 600;
   font-style: normal;
 }
@@ -199,6 +220,29 @@ section[id],
   line-height: 1.25;
   font-weight: 600;
   margin: 0;
+}
+
+/* Phosphor decay: terminal headings glow on hover, fade slowly back */
+:root[data-mode="terminal"] h1,
+:root[data-mode="terminal"] h2,
+:root[data-mode="terminal"] h3,
+:root[data-mode="terminal"] .t-h1,
+:root[data-mode="terminal"] .t-h2,
+:root[data-mode="terminal"] .t-h3,
+:root[data-mode="terminal"] .phosphor {
+  transition: text-shadow 1.2s var(--ease-out-expo-ish),
+              color 240ms var(--ease-out-expo-ish);
+  text-shadow: 0 0 0 transparent;
+}
+:root[data-mode="terminal"] h1:hover,
+:root[data-mode="terminal"] h2:hover,
+:root[data-mode="terminal"] h3:hover,
+:root[data-mode="terminal"] .t-h1:hover,
+:root[data-mode="terminal"] .t-h2:hover,
+:root[data-mode="terminal"] .t-h3:hover,
+:root[data-mode="terminal"] .phosphor:hover {
+  text-shadow: 0 0 10px var(--accent-glow), 0 0 24px var(--accent-glow);
+  transition-duration: 120ms;
 }
 :root[data-mode="corporate"] .t-h3,
 :root[data-mode="corporate"] h3 {
@@ -348,12 +392,25 @@ code {
 /* =========================================================================
    Status dot
    ========================================================================= */
+@keyframes dot-pulse {
+  0%, 100% {
+    box-shadow: 0 0 8px var(--accent-glow);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 14px var(--accent-glow), 0 0 22px var(--accent-glow);
+    transform: scale(1.12);
+  }
+}
 .dot {
   display: inline-block;
   width: 8px; height: 8px;
   border-radius: 999px;
   background: var(--accent);
   box-shadow: 0 0 8px var(--accent-glow);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dot { animation: dot-pulse 2.2s var(--ease-out-expo-ish) infinite; }
 }
 .dot.warn   { background: var(--warn);   box-shadow: 0 0 8px rgba(255,180,84,0.4); }
 .dot.danger { background: var(--danger); box-shadow: 0 0 8px rgba(255,92,92,0.4); }
@@ -399,3 +456,156 @@ code {
 }
 
 @media (max-width: 720px) { .hide-sm { display: none; } }
+
+/* Roadmap: horizontal on desktop, vertical on mobile */
+.roadmap-track {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  overflow-x: auto;
+}
+@media (max-width: 720px) {
+  .roadmap-track {
+    flex-direction: column;
+    overflow-x: visible;
+    gap: 20px;
+  }
+  .roadmap-track > div { min-width: 0 !important; }
+  .roadmap-connector { display: none; }
+}
+
+/* Mobile nav: hide inline links, show burger */
+@media (max-width: 720px) {
+  .nav-inline { display: none !important; }
+  .nav-burger { display: inline-flex !important; }
+}
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  top: 0;
+  z-index: 60;
+  background: rgba(5,6,7,0.6);
+  backdropFilter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+@media (min-width: 721px) {
+  .nav-drawer { display: none; }
+}
+
+/* Section padding helpers — clamp for mobile breathing room */
+.section {
+  padding: clamp(40px, 8vw, 64px) clamp(16px, 4vw, 24px);
+}
+.section--hero {
+  padding: clamp(64px, 10vw, 96px) clamp(16px, 4vw, 24px) clamp(40px, 6vw, 64px);
+}
+.section--container {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* =========================================================================
+   Nav link (terminal + corporate) — CSS hover instead of JS handlers
+   ========================================================================= */
+.nav-link {
+  font-family: var(--font-mono);
+  color: var(--fg-1);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out-expo-ish),
+              text-shadow var(--dur-fast) var(--ease-out-expo-ish);
+  position: relative;
+}
+.nav-link:hover,
+.nav-link:focus-visible,
+.nav-link.is-active {
+  color: var(--accent);
+  outline: none;
+}
+:root[data-mode="terminal"] .nav-link:hover,
+:root[data-mode="terminal"] .nav-link:focus-visible,
+:root[data-mode="terminal"] .nav-link.is-active {
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+.nav-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.nav-link.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 1px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+/* Copy button (terminal contact rows) */
+.copy-btn {
+  transition: color var(--dur-fast) var(--ease-out-expo-ish),
+              border-color var(--dur-fast) var(--ease-out-expo-ish),
+              background var(--dur-fast) var(--ease-out-expo-ish);
+}
+.copy-btn:hover,
+.copy-btn:focus-visible {
+  color: var(--accent) !important;
+  border-color: var(--accent);
+  background: rgba(0, 255, 65, 0.06);
+  outline: none;
+}
+
+/* Contact line — show copy button only on row hover/focus */
+.contact-line .copy-btn { opacity: 0; }
+.contact-line:hover .copy-btn,
+.contact-line:focus-within .copy-btn { opacity: 1; }
+
+/* Contact card hover lift */
+.contact-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform var(--dur-fast) var(--ease-out-expo-ish),
+              border-color var(--dur-fast) var(--ease-out-expo-ish);
+}
+.contact-card:hover,
+.contact-card:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* Chip (terminal quick-actions, badges as buttons) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  background: var(--bg-2);
+  color: var(--fg-1);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out-expo-ish),
+              border-color var(--dur-fast) var(--ease-out-expo-ish);
+}
+.chip:hover,
+.chip:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* =========================================================================
+   Print stylesheet — light A4-friendly rendering for the corporate brief
+   ========================================================================= */
+@media print {
+  :root[data-mode="terminal"] body::before,
+  :root[data-mode="terminal"] body::after { display: none !important; }
+  html, body { background: #fff !important; color: #111 !important; }
+  header, footer { break-inside: avoid; }
+  .nav-drawer, .nav-burger { display: none !important; }
+  .btn, .copy-btn { display: none !important; }
+  .card { box-shadow: none !important; break-inside: avoid; }
+  .section { padding: 24px 0 !important; }
+  a { color: #111 !important; text-decoration: none !important; }
+  .dot { animation: none !important; }
+}

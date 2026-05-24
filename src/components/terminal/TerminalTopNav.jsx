@@ -4,10 +4,11 @@ const LINKS = [
   ['#whoami', 'whoami'],
   ['#experience', 'experience'],
   ['#arsenal', 'arsenal'],
+  ['#roadmap', 'roadmap'],
   ['#contact', 'contact'],
 ];
 
-export default function TerminalTopNav() {
+export default function TerminalTopNav({ activeId }) {
   return (
     <div
       style={{
@@ -40,34 +41,29 @@ export default function TerminalTopNav() {
           ralph@offensive-sec:~$
         </div>
         <nav
+          aria-label="Primary"
           style={{
             marginLeft: 'auto',
             display: 'flex',
-            gap: 32,
+            gap: 28,
             fontSize: 13,
           }}
         >
-          {LINKS.map(([h, l]) => (
-            <a
-              key={l}
-              href={h}
-              style={{
-                color: 'var(--fg-1)',
-                textDecoration: 'none',
-                transition: 'color var(--dur-fast) var(--ease-out-expo-ish)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--accent)';
-                e.currentTarget.style.textShadow = '0 0 8px var(--accent-glow)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--fg-1)';
-                e.currentTarget.style.textShadow = 'none';
-              }}
-            >
-              {l}
-            </a>
-          ))}
+          {LINKS.map(([h, l]) => {
+            const id = h.slice(1);
+            const isActive = activeId === id;
+            return (
+              <a
+                key={l}
+                href={h}
+                aria-current={isActive ? 'true' : undefined}
+                className={`nav-link${isActive ? ' is-active' : ''}`}
+                style={{ fontSize: 13 }}
+              >
+                {l}
+              </a>
+            );
+          })}
         </nav>
       </div>
     </div>

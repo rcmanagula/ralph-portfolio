@@ -1,6 +1,36 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+const ASCII_FULL = `██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗    ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ██╗   ██╗██╗      █████╗
+██╔══██╗██╔══██╗██║     ██╔══██╗██║  ██║    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██║   ██║██║     ██╔══██╗
+██████╔╝███████║██║     ██████╔╝███████║    ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗██║   ██║██║     ███████║
+██╔══██╗██╔══██║██║     ██╔═══╝ ██╔══██║    ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██║   ██║██║     ██╔══██║
+██║  ██║██║  ██║███████╗██║     ██║  ██║    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝╚██████╔╝███████╗██║  ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝`;
+
+const ASCII_COMPACT = `██████╗  ██████╗███╗   ███╗
+██╔══██╗██╔════╝████╗ ████║
+██████╔╝██║     ██╔████╔██║
+██╔══██╗██║     ██║╚██╔╝██║
+██║  ██║╚██████╗██║ ╚═╝ ██║
+╚═╝  ╚═╝ ╚═════╝╚═╝     ╚═╝`;
+
+function useIsMobile(breakpoint = 720) {
+  const [m, setM] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    const handler = (e) => setM(e.matches);
+    setM(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return m;
+}
+
 export default function PixelHero({ identity }) {
+  const isMobile = useIsMobile();
+
   const rows = [
     { label: 'SYSTEM', value: 'Portfolio v1.0 loaded' },
     { label: 'ROLE', value: identity.title },
@@ -11,20 +41,22 @@ export default function PixelHero({ identity }) {
   ];
 
   return (
-    <section style={{ padding: '64px 0 32px' }}>
+    <section style={{ padding: isMobile ? '40px 0 24px' : '64px 0 32px' }}>
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'auto 1fr',
-          gap: 40,
+          gridTemplateColumns: isMobile ? '1fr' : 'auto 1fr',
+          gap: isMobile ? 20 : 40,
           alignItems: 'center',
-          marginBottom: 56,
+          marginBottom: isMobile ? 32 : 56,
+          justifyItems: isMobile ? 'center' : 'stretch',
+          textAlign: isMobile ? 'center' : 'left',
         }}
       >
         <div
           style={{
-            width: 200,
-            height: 220,
+            width: isMobile ? 120 : 200,
+            height: isMobile ? 140 : 220,
             border: '2px solid var(--accent)',
             background: 'var(--bg-1)',
             overflow: 'hidden',
@@ -46,34 +78,33 @@ export default function PixelHero({ identity }) {
 
         <pre
           aria-label="RALPH MANAGULA"
+          className="phosphor"
           style={{
             margin: 0,
             fontFamily: 'var(--font-mono)',
             color: 'var(--accent)',
-            fontSize: 'clamp(5px, 0.78vw, 11px)',
+            fontSize: isMobile ? 'clamp(7px, 2.4vw, 12px)' : 'clamp(5px, 0.78vw, 11px)',
             lineHeight: 1.0,
             letterSpacing: 0,
             whiteSpace: 'pre',
             overflow: 'hidden',
+            maxWidth: '100%',
           }}
         >
-{`██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗    ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ██╗   ██╗██╗      █████╗
-██╔══██╗██╔══██╗██║     ██╔══██╗██║  ██║    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██║   ██║██║     ██╔══██╗
-██████╔╝███████║██║     ██████╔╝███████║    ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗██║   ██║██║     ███████║
-██╔══██╗██╔══██║██║     ██╔═══╝ ██╔══██║    ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██║   ██║██║     ██╔══██║
-██║  ██║██║  ██║███████╗██║     ██║  ██║    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝╚██████╔╝███████╗██║  ██║
-╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝`}
+          {isMobile ? ASCII_COMPACT : ASCII_FULL}
         </pre>
       </div>
 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(160px, 200px) auto 1fr',
+          gridTemplateColumns: isMobile
+            ? 'auto auto 1fr'
+            : 'minmax(160px, 200px) auto 1fr',
           rowGap: 8,
-          columnGap: 24,
+          columnGap: isMobile ? 12 : 24,
           fontFamily: 'var(--font-mono)',
-          fontSize: 14,
+          fontSize: isMobile ? 12 : 14,
         }}
       >
         {rows.map((r, i) => (
@@ -102,7 +133,7 @@ export default function PixelHero({ identity }) {
         style={{
           marginTop: 28,
           fontFamily: 'var(--font-mono)',
-          fontSize: 14,
+          fontSize: isMobile ? 12 : 14,
           color: 'var(--accent)',
           textShadow: '0 0 8px var(--accent-glow)',
         }}

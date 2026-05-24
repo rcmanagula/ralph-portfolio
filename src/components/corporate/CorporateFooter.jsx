@@ -1,15 +1,15 @@
 'use client';
 
-export default function CorporateFooter({ identity, education }) {
+export default function CorporateFooter({ identity, education, brief }) {
   return (
     <footer
       style={{
         borderTop: '1px solid var(--border)',
         marginTop: 80,
-        padding: '40px 24px 32px',
+        padding: 'clamp(24px, 5vw, 40px) clamp(16px, 4vw, 24px) clamp(20px, 4vw, 32px)',
       }}
     >
-      <div style={{ maxWidth: 'var(--content-max)', margin: '0 auto' }}>
+      <div className="section--container">
         <div
           style={{
             display: 'grid',
@@ -68,6 +68,51 @@ export default function CorporateFooter({ identity, education }) {
             <div className="t-small">Open to remote engagements</div>
           </div>
         </div>
+        {brief && (
+          <div
+            style={{
+              marginTop: 8,
+              marginBottom: 24,
+              padding: '18px 20px',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--r-md)',
+              background: 'var(--bg-1)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: 16,
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+            }}
+          >
+            <div>
+              <div className="t-eyebrow" style={{ marginBottom: 4 }}>
+                Prepared by
+              </div>
+              <div style={{ color: 'var(--fg-0)' }}>{brief.preparedBy}</div>
+            </div>
+            <div>
+              <div className="t-eyebrow" style={{ marginBottom: 4 }}>
+                Document
+              </div>
+              <div style={{ color: 'var(--fg-0)' }}>
+                {brief.docId} · {brief.version}
+              </div>
+            </div>
+            <div>
+              <div className="t-eyebrow" style={{ marginBottom: 4 }}>
+                Period
+              </div>
+              <div style={{ color: 'var(--fg-0)' }}>{brief.period}</div>
+            </div>
+            <div>
+              <div className="t-eyebrow" style={{ marginBottom: 4 }}>
+                Classification
+              </div>
+              <div style={{ color: 'var(--accent)' }}>{brief.classification}</div>
+            </div>
+          </div>
+        )}
+
         <div
           style={{
             display: 'flex',
